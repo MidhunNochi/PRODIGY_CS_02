@@ -10,9 +10,9 @@ def encrypt_image(image_path, key, swap):
 
     if swap:
         # Swap pixel values in a deterministic manner
-        encrypted_pixels = encrypted_pixels.flatten()
-        encrypted_pixels[::2], encrypted_pixels[1::2] = encrypted_pixels[1::2], encrypted_pixels[::2]
-        encrypted_pixels = encrypted_pixels.reshape(pixels.shape)
+        flat_pixels = encrypted_pixels.flatten()
+        flat_pixels[::2], flat_pixels[1::2] = flat_pixels[1::2], flat_pixels[::2]
+        encrypted_pixels = flat_pixels.reshape(pixels.shape)
     
     encrypted_image = Image.fromarray(encrypted_pixels.astype('uint8'))
     encrypted_image.save('encrypted_image.png')
@@ -23,9 +23,9 @@ def decrypt_image(image_path, key, swap):
 
     if swap:
         # Swap pixel values back to original positions
-        pixels = pixels.flatten()
-        pixels[::2], pixels[1::2] = pixels[1::2], pixels[::2]
-        pixels = pixels.reshape(pixels.shape)
+        flat_pixels = pixels.flatten()
+        flat_pixels[::2], flat_pixels[1::2] = flat_pixels[1::2], flat_pixels[::2]
+        pixels = flat_pixels.reshape(pixels.shape)
 
     # Subtract the key from each pixel value
     decrypted_pixels = (pixels - key) % 256
